@@ -24,7 +24,7 @@ jobs:
               run: echo Runing tests ...
 
             - name: Failing tests
-              if: github.event.inputs.pass-unit-tests
+              if: inputs.pass-unit-tests
               run: exit 1
 
     deploy-nonprod:
