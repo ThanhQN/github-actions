@@ -38,7 +38,7 @@ jobs:
               run: echo Deploying to nonprod ...
 
     e2e-tests:
-        runs-on: ubuntu-test
+        runs-on: ubuntu-latest
         needs: 
             - deploy-nonprod
         steps: 
