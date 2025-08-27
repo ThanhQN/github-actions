@@ -3,6 +3,10 @@ name: 14 - Working with Artifacts
 on:
     workflow_dispatch:
 
+env:
+ APP_SHA: app-${{github.sha}}
+ TEST_COVERAGE_KEY: test-coverage-${{github.sha}}
+
 jobs:
 
     test-build:
@@ -31,7 +35,13 @@ jobs:
               run: npm ci
 
             - name: Unit tests
-              run: npx vitest
+              run: npx vitest -- --coverage
+            
+            - name: Upload Test Coverage Files
+              uses: actions/upload-artifact@v4
+              with: 
+                name: $TEST_COVERAGE_KEY
+                path: my-react-app/coverage
 
             - name: Build Code
               run: npm run build
@@ -39,7 +49,7 @@ jobs:
             - name: Upload build files
               uses: actions/upload-artifact@v4
               with: 
-                name: app
+                name: $APP_SHA
                 path: my-react-app/dist
 
     deploy:
@@ -50,8 +60,14 @@ jobs:
             - name: Download Build Files
               uses: actions/download-artifact@v4
               with:
-                name: app
+                name: $APP_SHA
                 path: build
+
+            - name: Download Test Coverage Files
+              uses: actions/download-artifact@v4
+              with:
+                name: $TEST_COVERAGE_KEY
+                path: coverage
 
             - name: Show Folder Structure
               run: ls -R
