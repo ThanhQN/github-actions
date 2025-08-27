@@ -35,7 +35,7 @@ jobs:
               run: npm ci
 
             - name: Unit tests
-              run: npx vitest -- --coverage
+              run: npx vitest run --coverage
             
             - name: Upload Test Coverage Files
               uses: actions/upload-artifact@v4
