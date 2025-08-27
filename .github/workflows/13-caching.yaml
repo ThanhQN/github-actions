@@ -106,7 +106,7 @@ jobs:
               run: npx vitest
 
             - name: Linting
-              run: Linting ...
+              run: echo Linting ...
 
 
                 
