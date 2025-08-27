@@ -43,10 +43,7 @@ jobs:
               uses: actions/cache@v3
               with:
                 path: my-react-app/node_modules
-                key: ${{needs.install-deps.outputs.HASH}}
-
-            - name: Cache Check
-              run: echo "Using cache ${{steps.cache.outputs.cache-hit}}"
+                key: ${{ needs.install-deps.outputs.HASH }}
 
             - name: Run Tests
               run: npx vitest
@@ -75,10 +72,15 @@ jobs:
               run: echo "HASH=deps-node-modules-${{ hashFiles('13-caching/react-app/package-lock.json') }}" >> $GIHUB_OUTPUT
 
             - name: Download Cache Dependencies
+              id: cache
               uses: actions/cache@v3
               with: 
                 path: my-react-app/node_modules
                 key: ${{steps.cache-key.outputs.HASH}}
+
+            - name: Install Dependencies
+              if: ${{!(steps.cache.outputs.cache-hit == 'true')}}
+              run: npm ci
 
 
     linting:
