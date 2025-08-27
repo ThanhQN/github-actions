@@ -21,6 +21,8 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        needs: 
+            - install-deps
         defaults:
             run:
                 working-directory: my-react-app
@@ -41,14 +43,10 @@ jobs:
               uses: actions/cache@v3
               with:
                 path: my-react-app/node_modules
-                key: deps-node-modules-${{ hashFiles('my-react-app/package-lock.json') }}
+                key: ${{needs.install-deps.outputs.HASH}}
 
             - name: Cache Check
               run: echo "Using cache ${{steps.cache.outputs.cache-hit}}"
-
-            - name: Install Dependencies
-              if: ${{!(steps.cache.outputs.cache-hit == 'true')}}
-              run: npm ci
 
             - name: Run Tests
               run: npx vitest
@@ -58,4 +56,66 @@ jobs:
 
             - name: Deploying to nonprod
               run: echo Deploying to nonprod 
+    install-deps:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: my-react-app
+
+        steps:
+
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+
+            - name: Calculate Cache Key
+              id: cache-key
+              run: echo "HASH=deps-node-modules-${{ hashFiles('13-caching/react-app/package-lock.json') }}" >> $GIHUB_OUTPUT
+
+            - name: Download Cache Dependencies
+              uses: actions/cache@v3
+              with: 
+                path: my-react-app/node_modules
+                key: ${{steps.cache-key.outputs.HASH}}
+
+
+    linting:
+        runs-on: ubuntu-latest
+        needs:
+            - install-deps
+        defaults:
+            run: 
+                working-directory: my-react-app
+        
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20.x
+
+            - name: Download Cache Dependencies
+              uses: actions/cache@v3
+              with: 
+                path: my-react-app/node_modules
+                key: ${{needs.install-deps.outputs.HASH}}
+
+            - name: Testing
+              run: npx vitest
+
+            - name: Linting
+              run: Linting ...
+
+
+                
+
+            
+
+
+
+
 
