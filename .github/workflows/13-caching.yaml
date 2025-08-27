@@ -7,6 +7,16 @@ on:
                 description: "Use cache"
                 type: boolean
                 default: false
+            
+            node-version:
+                description: "Node version"
+                type: choice
+                options:
+                    - 18.x
+                    - 20.x
+                    - 21.x
+                default: 20.x
+
 
 jobs:
     build:
@@ -23,9 +33,21 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v4
               with: 
-                node-version: 20.x
+                node-version: ${{inputs.node-version}}
             
+            - name: Download cached dependencies
+              id: cache
+              if: inputs.use-cache
+              uses: actions/cache@v3
+              with:
+                path: my-react-app/node_modules
+                key: deps-node-modules-${{ hashFiles('my-react-app/package-lock.json') }}
+
+            - name: Cache Check
+              run: echo "Using cache ${{steps.cache.outputs.cache-hit}}"
+
             - name: Install Dependencies
+              if: steps.cache.outputs.cache-hit == 'false'
               run: npm ci
 
             - name: Run Tests
