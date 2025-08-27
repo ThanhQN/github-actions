@@ -3,11 +3,6 @@ name: 13 - Using Caching
 on:
     workflow_dispatch:
         inputs:
-            use-cache:
-                description: "Use cache"
-                type: boolean
-                default: false
-            
             node-version:
                 description: "Node version"
                 type: choice
@@ -39,7 +34,6 @@ jobs:
             
             - name: Download cached dependencies
               id: cache
-              if: inputs.use-cache
               uses: actions/cache@v3
               with:
                 path: my-react-app/node_modules
