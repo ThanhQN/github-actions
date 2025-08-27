@@ -49,6 +49,8 @@ jobs:
               run: echo Deploying to nonprod 
     install-deps:
         runs-on: ubuntu-latest
+        outputs:
+            HASH: ${{steps.cache-key.outputs.HASH}}
         defaults:
             run:
                 working-directory: my-react-app
