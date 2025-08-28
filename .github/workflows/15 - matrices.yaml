@@ -5,7 +5,7 @@ on:
         inputs:
             fail-fast:
                 type: boolean
-                description: "Cancel all pending jobs when any job fails"
+                description: "Fail-fast: Cancel all pending jobs when any job fails"
                 default: true
 
 jobs:
