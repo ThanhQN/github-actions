@@ -30,8 +30,20 @@ jobs:
               with:
                 node-version: ${{matrix.node}}
 
+            - name: Fail if experimental
+              if: ${{matrix.tag}} == 'experimental'
+              run: exit 1
+
             - name: Perform some tests
-              run: echo "Running tests on OS ${{matrix.os}} and NodeJS ${{matrix.node}}"
+              run: | 
+                echo "Running tests on OS ${{matrix.os}} and NodeJS ${{matrix.node}}"
+                sleep 10
+
+            - name: Uploading test results
+              run: echo "Uploading test results"
+
+
+              
 
             
                 
