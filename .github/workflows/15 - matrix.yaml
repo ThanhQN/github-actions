@@ -17,8 +17,9 @@ jobs:
                 os: [ubuntu-latest, window-latest]
                 node: [20.x, 21.x]
                 include:
-                    - os: ubuntu-latest
-                      node-version: 18.x
+                    - node-version: 18.x
+                      os: ubuntu-latest
+
 
         steps:
             - name: Setup Node
