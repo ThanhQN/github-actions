@@ -2,17 +2,13 @@ name: 15 - Working With Matrices
 
 on:
     workflow_dispatch:
-        inputs:
-            fail-fast:
-                type: boolean
-                description: "Fail-fast: Cancel all pending jobs when any job fails"
-                default: true
 
 jobs:
     backwards-compatibility: 
         name: ${{matrix.os}}-${{matrix.node}}
         runs-on: ubuntu-latest
-        strategy: 
+        strategy:
+            fail-fast: false 
             matrix:
                 os: [ubuntu-latest, window-latest]
                 node: [20.x, 21.x]
