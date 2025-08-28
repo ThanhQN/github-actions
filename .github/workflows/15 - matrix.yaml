@@ -1,0 +1,41 @@
+name: 15 - Working With Matrices
+
+on:
+    workflow_dispatch:
+        inputs:
+            fail-fast:
+                type: boolean
+                description: "Fail-fast: Cancel all pending jobs when any job fails"
+                default: true
+
+jobs:
+    backwards-compatibility: 
+        name: ${{matrix.os}}-${{matrix.node}}
+        runs-on: ubuntu-latest
+        strategy: 
+            matrix:
+                os: [ubuntu-latest, window-latest]
+                node: [20.x, 21.x]
+                include:
+                    - os: ubuntu-latest
+                      node-version: 21.x
+                      tag: experimental
+                    
+                    - os: ubuntu-latest
+                      node-version: 18.x
+
+        steps:
+            - name: Setup Node
+              uses: setup-node@v4
+              with:
+                node-version: ${{matrix.node}}
+
+            - name: Perform some tests
+              run: echo "Running tests on OS ${{matrix.os}} and NodeJS ${{matrix.node}}"
+
+            
+                
+            
+
+
+    
